@@ -158,7 +158,7 @@ As you can see, we use an environnement variable `LEVEL` to define the logging l
 We use the lib `env-cmd` to load this file for development.
 
 ```sh
-echo "LEVEL=debug\n" >> .env
+echo "LEVEL=debug" >> .env
 npm i -D env-cmd
 ```
 
@@ -309,7 +309,7 @@ We will use [Passport](http://www.passportjs.org/docs/downloads/html/) an authen
 Install :
 
 ```
-echo "JWT_SECRET=IWillBeBack\n" >> .env
+echo "JWT_SECRET=IWillBeBack" >> .env
 npm i -S passport passport-jwt
 ```
 
