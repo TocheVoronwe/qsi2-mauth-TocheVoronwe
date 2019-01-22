@@ -27,6 +27,6 @@ apiRoutes
     next();
   });
 
-// root of our API will be http://localhost:5000/api/v1
+// root of our API will be http://localhost:8080/api/v1
 api.use('/api/v1', apiRoutes);
 module.exports = api;
