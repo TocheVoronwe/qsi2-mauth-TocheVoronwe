@@ -2,12 +2,16 @@ const { ExtractJwt, Strategy } = require('passport-jwt');
 const passport = require('passport');
 
 const { getUser } = require('./users');
+const logger = require('../logger');
 
 // Create our strategy
 const jwtStrategy = opts =>
   new Strategy(opts, (jwtPayload, done) =>
     getUser(jwtPayload)
       .then(user => {
+        logger.info('<<<<GETTING USER<<<<<<<');
+        logger.info(user);
+        logger.info('>>>>>>>>>>>>>>>>>>>>>>>');
         if (user) {
           done(null, user);
         } else {

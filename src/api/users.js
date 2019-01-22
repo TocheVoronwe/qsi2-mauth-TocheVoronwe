@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jwt-simple');
-const { createUser, loginUser } = require('../controller/users');
+const {createUser, deleteUser, loginUser, updateUser} = require('../controller/users');
 const logger = require('../logger');
 
 const apiUsers = express.Router();
@@ -25,26 +25,26 @@ const apiUsers = express.Router();
 apiUsers.post('/', (req, res) =>
   !req.body.email || !req.body.password
     ? res.status(400).send({
-        success: false,
-        message: 'email and password are required'
-      })
+      success: false,
+      message: 'email and password are required'
+    })
     : createUser(req.body)
-        .then(user => {
-          const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET);
-          return res.status(201).send({
-            success: true,
-            token: `JWT ${token}`,
-            profile: user,
-            message: 'user created'
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to create user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`
-          });
-        })
+    .then(user => {
+      const token = jwt.encode({id: user.id}, process.env.JWT_SECRET);
+      return res.status(201).send({
+        success: true,
+        token: `JWT ${token}`,
+        profile: user,
+        message: 'user created'
+      });
+    })
+    .catch(err => {
+      logger.error(`💥 Failed to create user : ${err.stack}`);
+      return res.status(500).send({
+        success: false,
+        message: `${err.name} : ${err.message}`
+      });
+    })
 );
 
 /**
@@ -64,26 +64,26 @@ apiUsers.post('/', (req, res) =>
 apiUsers.post('/login', (req, res) =>
   !req.body.email || !req.body.password
     ? res.status(400).send({
-        success: false,
-        message: 'email and password are required'
-      })
+      success: false,
+      message: 'email and password are required'
+    })
     : loginUser(req.body)
-        .then(user => {
-          const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET);
-          return res.status(200).send({
-            success: true,
-            token: `JWT ${token}`,
-            profile: user,
-            message: 'user logged in'
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to login user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`
-          });
-        })
+    .then(user => {
+      const token = jwt.encode({id: user.id}, process.env.JWT_SECRET);
+      return res.status(200).send({
+        success: true,
+        token: `JWT ${token}`,
+        profile: user,
+        message: 'user logged in'
+      });
+    })
+    .catch(err => {
+      logger.error(`💥 Failed to login user : ${err.stack}`);
+      return res.status(500).send({
+        success: false,
+        message: `${err.name} : ${err.message}`
+      });
+    })
 );
 
 
@@ -98,8 +98,6 @@ apiUsers.post('/login', (req, res) =>
  */
 const apiUsersProtected = express.Router();
 apiUsersProtected.get('/', (req, res) => {
-  logger.debug('Get route called');
-  logger.debug(req);
   res.status(200).send({
     success: true,
     profile: req.user,
@@ -118,8 +116,12 @@ apiUsersProtected.get('/', (req, res) => {
  * @apiSuccess {JSON} profile Profile informations about the User.
  */
 
-apiUsersProtected.put('/', (req, res) =>
-  res.status(200).send('hihi')
+apiUsersProtected.put('/', (req, res) => {
+    updateUser(req.user.id, req.body).then(
+      () => res.status(204)
+    )
+      .catch(error => res.status(500).send(error));
+  }
 );
 
 
@@ -135,7 +137,7 @@ apiUsersProtected.put('/', (req, res) =>
  */
 
 apiUsersProtected.delete('/', (req, res) =>
-  res.status(200).send('hihi')
+  deleteUser(req.user.id).then(() => res.status(204))
 );
 
 module.exports = { apiUsers, apiUsersProtected };
