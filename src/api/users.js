@@ -86,13 +86,56 @@ apiUsers.post('/login', (req, res) =>
         })
 );
 
+
+/**
+ * @api {get} /users Get user
+ * @apiVersion 1.0.0
+ * @apiName getUser
+ * @apiGroup Users
+ *
+ * @apiSuccess {STRING} token JWT token.
+ * @apiSuccess {JSON} profile Profile informations about the User.
+ */
 const apiUsersProtected = express.Router();
-apiUsersProtected.get('/', (req, res) =>
+apiUsersProtected.get('/', (req, res) => {
+  logger.debug('Get route called');
+  logger.debug(req);
   res.status(200).send({
     success: true,
     profile: req.user,
     message: 'user logged in'
-  })
+  });
+});
+
+/**
+ * @api {put} /users modify User
+ * @apiVersion 1.0.0
+ * @apiName modifyUser
+ * @apiGroup Users
+ *
+ *
+ * @apiSuccess {STRING} token JWT token.
+ * @apiSuccess {JSON} profile Profile informations about the User.
+ */
+
+apiUsersProtected.put('/', (req, res) =>
+  res.status(200).send('hihi')
+);
+
+
+/**
+ * @api {delete} /users delete User
+ * @apiVersion 1.0.0
+ * @apiName deleteUser
+ * @apiGroup Users
+ *
+ *
+ * @apiSuccess {STRING} token JWT token.
+ * @apiSuccess {JSON} profile Profile informations about the User.
+ */
+
+apiUsersProtected.delete('/', (req, res) =>
+  res.status(200).send('hihi')
 );
 
 module.exports = { apiUsers, apiUsersProtected };

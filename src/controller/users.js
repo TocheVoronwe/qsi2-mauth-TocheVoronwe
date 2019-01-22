@@ -1,5 +1,6 @@
 const omit = require('lodash.omit');
 const { Users } = require('../model');
+const logger = require('../logger');
 
 const createUser = ({ firstName, lastName, email, password }) =>
   Users.create({
@@ -35,7 +36,8 @@ const loginUser = ({ email, password }) =>
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
-const getUser = ({ id }) =>
+const getUser = ({ id }) => {
+  logger.info('GetUserCalled', id);
   Users.findOne({
     where: {
       id
@@ -43,13 +45,13 @@ const getUser = ({ id }) =>
   }).then(user =>
     user && !user.deletedAt
       ? omit(
-          user.get({
-            plain: true
-          }),
-          Users.excludeAttributes
-        )
-      : Promise.reject(new Error('UNKOWN OR DELETED USER'))
-  );
+      user.get({
+        plain: true
+      }),
+      Users.excludeAttributes
+      )
+      : Promise.reject(new Error('UNKOWN OR DELETED USER')))
+};
 
 module.exports = {
   createUser,
