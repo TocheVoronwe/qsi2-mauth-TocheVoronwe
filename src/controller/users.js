@@ -64,8 +64,8 @@ const updateUser = (id, user) => {
     });
 };
 
-const deleteUser = (id) => {
-  return Users.update({
+const deleteUser = (id) =>
+  Users.update({
     deletedAt: Date.now()
   }, {
     where: {
@@ -74,7 +74,6 @@ const deleteUser = (id) => {
   }).catch((error) => {
     Promise.reject(new Error(`UNKOWN OR DELETED USER, IMPOSSIBLE TO DELETE ${error}`));
   });
-};
 
 module.exports = {
   createUser,

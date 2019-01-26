@@ -124,7 +124,6 @@ apiUsersProtected.put('/', (req, res) => {
   }
 );
 
-
 /**
  * @api {delete} /users delete User
  * @apiVersion 1.0.0

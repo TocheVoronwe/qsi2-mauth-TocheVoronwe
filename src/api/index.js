@@ -1,5 +1,6 @@
 const express = require('express');
 const { apiUsers, apiUsersProtected } = require('./users');
+const { apiGroups, apiGroupsProtected } = require('./groups');
 const { isAuthenticated, initAuth } = require('../controller/auth');
 // create an express Application for our api
 const api = express();
@@ -25,7 +26,18 @@ apiRoutes
       message: `${err.name} : ${err.message}`,
     });
     next();
-  });
+  })
+  .use('groups', apiGroups)
+  .use(isAuthenticated)
+  .use('/groups', apiGroupsProtected)
+  .use((err, req, res, next) => {
+    res.status(403).send({
+      success: false,
+      message: `${err.name} : ${err.message}`,
+    });
+    next();
+  })
+;
 
 // root of our API will be http://localhost:8080/api/v1
 api.use('/api/v1', apiRoutes);

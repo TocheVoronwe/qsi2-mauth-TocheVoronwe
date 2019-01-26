@@ -42,6 +42,7 @@
     "pg-hstore": "^2.3.2",
     "pino": "^5.10.6",
     "pino-pretty": "^2.5.0",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "uppercamelcase": "^3.0.0"
   }
 }

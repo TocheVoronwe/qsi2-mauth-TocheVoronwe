@@ -82,5 +82,11 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+
+/*  Users.associate = models => {
+    Users.belongsTo(models.Groups, { through: 'owner_id', as: 'Owner' });
+    Users.belongsToMany(models.Groups, { through: 'Member' });
+  };*/
+
   return Users;
 };
