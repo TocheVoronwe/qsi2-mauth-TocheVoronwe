@@ -7,7 +7,7 @@
     "test": "jest",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./src/**/*.js\" ",
     "eslint": "eslint . --fix",
-    "dev": "env-cmd .env node ./src"
+    "dev": "env-cmd .env nodemon ./src"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^3.4.0",
     "eslint-plugin-import": "^2.14.0",
+    "nodemon": "^1.18.9",
     "prettier": "^1.15.3"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
     "pg-hstore": "^2.3.2",
     "pino": "^5.10.6",
     "pino-pretty": "^2.5.0",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "uppercamelcase": "^3.0.0"
   }
 }
