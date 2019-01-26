@@ -22,7 +22,7 @@ const createGroup = ({title, description}, user) => {
   return Groups.create({
     title,
     description,
-    owner: user.id
+    owner_id: user.id
   }).then(group => group.get());
 };
 

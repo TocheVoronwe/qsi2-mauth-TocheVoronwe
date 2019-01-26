@@ -32,13 +32,5 @@ module.exports = (sequelize, DataTypes) => {
   );
 
 
-
-Groups.associate = models => {
-  Groups.belongsTo(models.Users, {as: 'owner'});
-  Groups.belongsToMany(models.Users, {through: 'Members'});
-/*  Groups.hasOne(models.Users, {as: 'Owner', foreignKey: models.Users});
-  Groups.hasMany(models.Users, {as: 'Members', foreignKey: models.Users});*/
-};
-
   return Groups;
 };
