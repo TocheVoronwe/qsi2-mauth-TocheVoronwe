@@ -13,27 +13,20 @@ const addUserToGroup = (userId, groupId) => {
 };
 
 const createGroup = ({title, description}, user) => {
-  logger.info('|||||||||CREATE GROUP|||||||||||');
-  logger.debug(user);
-  logger.debug(title);
-  logger.debug(description);
-  logger.debug(user);
-  logger.info('||||||||||||||||||||||');
   return Groups.create({
     title,
     description,
-    owner_id: user.id
-  }).then(group => group.get());
+    owner_id: user.id,
+    members: [
+      {UserId: user.id}
+    ]
+  }).then(group =>
+    group.get()
+  );
 };
 
-const getGroups = ({user, all}) =>
-  all
-    ? Groups.findAll()
-    : Groups.findAll({
-      where: {
-        owner: user.id
-      }
-    });
+const getGroups = () =>
+  Groups.findAll();
 
 module.exports = [
   addUserToGroup,

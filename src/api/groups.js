@@ -1,5 +1,5 @@
 const express = require('express');
-const [addUserToGroup, createGroup] = require('../controller/groups');
+const [addUserToGroup, createGroup, getGroups] = require('../controller/groups');
 
 const logger = require('../logger');
 
@@ -16,7 +16,7 @@ apiGroupsProtected.post('/', (req, res) => {
       message: 'description and title are required'
     })
     : createGroup(req.body, req.user)
-    .then(group => res.status(200).send(group))
+      .then(group => res.status(200).send(group));
 });
 
 apiGroupsProtected.put('/user', ({body}, res) => {
@@ -28,7 +28,7 @@ apiGroupsProtected.put('/user', ({body}, res) => {
       message: 'userId and groupId are required'
     })
     : addUserToGroup(body.userId, body.groupId)
-      .then(() => res.status(204))
+      .then(() => res.status(204));
 });
 
 apiGroupsProtected.delete('/', (req, res) => {
@@ -37,16 +37,11 @@ apiGroupsProtected.delete('/', (req, res) => {
       success: false,
       message: 'impossible to delete'
     })
-    : res.status(200).send(`I'll have to delete that`)
+    : res.status(200).send(`I'll have to delete that`);
 });
 
-apiGroupsProtected.get('/', (req, res) => {
-  !req.body.email
-    ? res.status(400).send({
-      success: false,
-      message: 'getting everything'
-    })
-    : res.status(200).send(`I'll have to delete that`)
-});
+apiGroupsProtected.get('/', (req, res) =>
+    getGroups().then(groups => res.status(200).send(groups))
+  .catch(() => res.status(500).send("Can't get anything")));
 
-module.exports = {apiGroups, apiGroupsProtected};
+module.exports = {apiGroups, apiGroupsProtected, getGroups };
