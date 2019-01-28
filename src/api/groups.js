@@ -1,5 +1,5 @@
 const express = require('express');
-const [addUserToGroup, createGroup, getGroups] = require('../controller/groups');
+const [addUserToGroup, createGroup, deleteMemberFromGroup, getGroups, getGroupsByOwner] = require('../controller/groups');
 
 const logger = require('../logger');
 
@@ -8,40 +8,58 @@ const apiGroups = express.Router();
 
 const apiGroupsProtected = express.Router();
 
-apiGroupsProtected.post('/', (req, res) => {
-  logger.debug('POST GROUP');
-  return !req.body.description || !req.body.title
+apiGroupsProtected.post('/', (req, res) =>
+  !req.body.description || !req.body.title
     ? res.status(400).send({
       success: false,
       message: 'description and title are required'
     })
     : createGroup(req.body, req.user)
-      .then(group => res.status(200).send(group));
-});
+    .then(group => res.status(200).send(group))
+    .catch(error => {
+      logger.error(error);
+      return res.status(500).send('Unable to create group');
+    }));
 
-apiGroupsProtected.put('/user', ({body}, res) => {
-  logger.debug('PUT GROUP');
-  logger.debug(body);
-  return !body.userId || !body.groupId
+apiGroupsProtected.put('/user', ({user, body}, res) =>
+  !body.userId || !body.groupId
     ? res.status(400).send({
       success: false,
       message: 'userId and groupId are required'
     })
-    : addUserToGroup(body.userId, body.groupId)
-      .then(() => res.status(204));
-});
+    : addUserToGroup(body.groupId, user.id, body.userId)
+    .then(() => res.status(204).send(`${body.userId} added`))
+    .catch(error => {
+      logger.error(error);
+      return res.status(500).send('Unable to put user in group');
+    }));
 
-apiGroupsProtected.delete('/', (req, res) => {
-  !req.body.email
+apiGroupsProtected.delete('/user', ({user, body}, res) =>
+  !body.userId || !body.groupId
     ? res.status(400).send({
       success: false,
-      message: 'impossible to delete'
+      message: 'userId and groupId are required'
     })
-    : res.status(200).send(`I'll have to delete that`);
-});
+    : deleteMemberFromGroup(body.groupId, user.id, body.userId)
+    .then((success) => res.status(204).send(success))
+    .catch(error => {
+      logger.error(error);
+      return res.status(500).send(error);
+    }));
 
 apiGroupsProtected.get('/', (req, res) =>
-    getGroups().then(groups => res.status(200).send(groups))
-  .catch(() => res.status(500).send("Can't get anything")));
+  getGroups().then(groups => res.status(200).send(groups))
+    .catch((error) => {
+      logger.error(error);
+      return res.status(500).send('Unable to get groups');
+    }));
 
-module.exports = {apiGroups, apiGroupsProtected, getGroups };
+apiGroupsProtected.get('/owner', ({user}, res) => {
+  getGroupsByOwner(user.id).then(groups => res.status(200).send(groups))
+    .catch(error => {
+      logger.error(error);
+      return res.status(500).send('Unable to get groups');
+    });
+});
+
+module.exports = {apiGroups, apiGroupsProtected, getGroups};

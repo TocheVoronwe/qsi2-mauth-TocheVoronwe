@@ -22,8 +22,9 @@ const apiUsers = express.Router();
  * @apiSuccess {STRING} token JWT token.
  * @apiSuccess {JSON} profile Profile informations about the User.
  */
-apiUsers.post('/', (req, res) =>
-  !req.body.email || !req.body.password
+apiUsers.post('/', (req, res) => {
+  logger.debug(req.bodyPolluted);
+  return !req.body.email || !req.body.password
     ? res.status(400).send({
       success: false,
       message: 'email and password are required'
@@ -45,7 +46,7 @@ apiUsers.post('/', (req, res) =>
         message: `${err.name} : ${err.message}`
       });
     })
-);
+});
 
 /**
  * @api {post} /users/login User login

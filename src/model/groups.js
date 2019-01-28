@@ -27,7 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       data: {
         type: DataTypes.JSON,
         description: 'Group data'
-      }
+      },
+    },
+    {
+      paranoid: true
     }
   );
 
