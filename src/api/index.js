@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const hpp = require('hpp');
 const helmet = require('helmet');
 const enforce = require('express-sslify');
@@ -11,6 +12,7 @@ initAuth();
 
 // apply a middelware to parse application/json body
 api.use(express.json({ limit: '1mb' }));
+api.use(cors());
 api.use(hpp());
 api.use(helmet());
 api.use(enforce.HTTPS({trustProtoHeader: true}));
